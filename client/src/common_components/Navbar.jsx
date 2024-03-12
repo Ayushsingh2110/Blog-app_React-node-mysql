@@ -4,12 +4,12 @@ import { Link } from "react-router-dom";
 
 const Navbar = () => {
   return (
-    <div className="navbar w-[100vw] py-2">
+    <header className="navbar w-[100vw] py-2">
       <div className="nav_container">
         <div className="h-full grow m-auto">
           <Link to="/">
             <img
-              src={require("../images/lekha-high-resolution-logo.png")}
+              src={require("../images/lekha-logo.png")}
               alt="Logo"
               className="h-full max-h-[50px]"
             />
@@ -43,7 +43,7 @@ const Navbar = () => {
           </span>
         </div>
       </div>
-    </div>
+    </header>
   );
 };
 
