@@ -2,7 +2,7 @@ import { RouterProvider, createBrowserRouter, Outlet } from "react-router-dom";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import Header from "./common_components/Header";
+import Navbar from "./common_components/Navbar";
 import Footer from "./common_components/Footer";
 import Single from "./pages/Single";
 import Write from "./pages/Write";
@@ -10,7 +10,7 @@ import Write from "./pages/Write";
 const Layout = () => {
   return (
     <>
-      <Header />
+      <Navbar />
       <Outlet />
       <Footer />
     </>

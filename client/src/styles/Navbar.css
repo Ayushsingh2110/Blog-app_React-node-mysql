@@ -1,0 +1,45 @@
+.navbar {
+  justify-items: center;
+}
+
+.link,
+span {
+  cursor: pointer;
+}
+.link h6 {
+  font-size: 16px;
+  font-weight: 300;
+}
+.write {
+  background-color: #b9e7e7;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 300;
+  border: 1px solid white;
+}
+.write:hover {
+  color: teal;
+  background-color: white;
+  border: 1px solid teal;
+}
+
+.nav_container {
+    width: 80%;
+    min-height: 7vh;
+    margin: auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 50px;
+  }
+  
+  @media (max-width:1055px){
+    .nav_container{
+      flex-direction: column;  
+      justify-content:center;
+    }
+  }
