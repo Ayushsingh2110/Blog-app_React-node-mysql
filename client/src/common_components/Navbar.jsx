@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 const Navbar = () => {
   return (
-    <header className="navbar w-[100vw] py-2">
+    <header className="navbar py-2">
       <div className="nav_container">
         <div className="h-full grow m-auto">
           <Link to="/">
