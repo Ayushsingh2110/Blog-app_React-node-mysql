@@ -4,7 +4,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Navbar from "./common_components/Navbar";
 import Footer from "./common_components/Footer";
-import Single from "./pages/Single";
+import BlogPage from "./pages/Single";
 import Write from "./pages/Write";
 
 const Layout = () => {
@@ -28,7 +28,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/post/:id",
-        element: <Single />
+        element: <BlogPage />
       },
       {
         path: "/create",

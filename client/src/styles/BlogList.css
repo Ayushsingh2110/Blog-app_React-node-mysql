@@ -1,0 +1,16 @@
+.read_more--btn {
+  width: max-content;
+  padding: 7.5px 15px;
+  border: none;
+  border-radius: 2rem;
+  cursor: pointer;
+  color: teal;
+  background-color: white;
+  border: 1px solid teal;
+}
+
+.read_more--btn:hover {
+  border: 1px solid white;
+  background-color: #b9e7e7;
+  color: black;
+}
