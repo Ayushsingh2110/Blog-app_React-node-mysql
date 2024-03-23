@@ -37,7 +37,7 @@ const Navbar = () => {
           <span>Ayush</span>
           <span>Logout</span>
           <span className="write">
-            <Link className="link" to="/write">
+            <Link className="link" to="/create-blog">
               Write
             </Link>
           </span>
