@@ -16,7 +16,10 @@ const Home = () => {
               <h1 className="text-[48px]">{post.title}</h1>
             </Link>
             <p className="text-[18px]">{post.desc}</p>
-            <button>Read More</button>
+            <Link to={`/post/${post.id}`}>
+             <button>Read More</button>
+            </Link>
+            
           </div>
         </div>
         ))}
