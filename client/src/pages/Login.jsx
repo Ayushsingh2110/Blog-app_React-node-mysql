@@ -23,8 +23,8 @@ const Login = () => {
       <div className="form-container sign-in">
         <form>
           <h1>Sign In</h1>
-          <input type="text" placeholder="username" />
-          <input type="password" placeholder="password" />
+          <input type="email" placeholder="Email" />
+          <input type="password" placeholder="Password" />
           <button>Sign In</button>
         </form>
       </div>
