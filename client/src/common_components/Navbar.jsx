@@ -36,7 +36,7 @@ const Navbar = () => {
           </Link>
           <span>Ayush</span>
           <span>Logout</span>
-          <span className="write">
+          <span id="write" className="write">
             <Link className="link" to="/create-blog">
               Write
             </Link>
