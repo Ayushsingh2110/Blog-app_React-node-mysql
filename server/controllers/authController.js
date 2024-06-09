@@ -6,7 +6,7 @@ class AuthController {
     async login(req, res) {
         const searchQuery = "SELECT * FROM users WHERE email=?"
 
-        await db.query(searchQuery, req.body.email, (err, user) => {
+        db.query(searchQuery, req.body.email, (err, user) => {
             if (err) {
                 return res.status(404).json({ message: "user not found" });
             }
@@ -27,15 +27,20 @@ class AuthController {
     }
 
     async register(req, res) {
-        const searchQuery = "SELECT * FROM users WHERE email=? OR username=?"
+            const CheckUser = new Promise((resolve, reject) => {
+                const searchQuery = "SELECT * FROM users WHERE email=? OR username=?"
+                db.query(searchQuery, [req.body.email, req.body.username], (err, data) => {
+                    if (err) {
+                        reject(err)
+                    } else if (data.length !== 0) {
+                        return res.status(409).json({ staus: 409, message: "user already exists !!" })
+                    } else {
+                        resolve(data)
+                    }
+                })
+            })
 
-        await db.query(searchQuery, [req.body.email, req.body.username], (err, data) => {
-            if (err) {
-                return res.status(500).json({message:"Internal server error", error: err});
-            }
-            if (data) {
-                return res.status(409).json({ message: "User already exist !!" })
-            } else {
+            CheckUser.then((data) => {
                 const salt = bcrypt.genSaltSync(10)
                 const hashPass = bcrypt.hashSync(req.body.password, salt)
                 const insertQuery = "INSERT INTO users(`username`,`email`,`password`) VALUES (?)"
@@ -44,16 +49,28 @@ class AuthController {
                     req.body.email,
                     hashPass
                 ]
-
-                db.query(insertQuery, values, (err, data) => {
-                    if (err){
-                        return res.status(500).json({error: err})
-                    } 
-
-                    return res.status(200).json({data})
+                db.query(insertQuery, [values], (err, insert_data) => {
+                    if (err) {
+                        return res.status(500).json({ error: err.message })
+                    }else if(insert_data.affectedRows === 1){
+                        return insert_data;
+                    }
                 })
-            }
-        })
+            })
+            .then(() => {
+                const searchQuery = "SELECT * FROM users WHERE email=? OR username=?"
+                db.query(searchQuery, [req.body.email, req.body.username], (err, user_data) => {
+                    if (err) {
+                        return res.status(500).json({ error: err.message })
+                    } else if (user_data.length !== 0) {
+                        const {password, ...other} = user_data[0];
+                        return res.status(200).json({message: "registraion successful !!", data: other })
+                    }
+                })
+            })
+            .catch((err) => {
+                return res.status(501).json({ error: err.message })
+            })
     }
 }
 

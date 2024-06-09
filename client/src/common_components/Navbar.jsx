@@ -1,8 +1,10 @@
 import React from "react";
 import "../styles/Navbar.css";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const Navbar = () => {
+  const current = useSelector((store) => store.auth);
   return (
     <header className="navbar py-2">
       <div className="nav_container">
@@ -34,13 +36,22 @@ const Navbar = () => {
           <Link className="link" to="/?cat=food">
             <h6>FOOD</h6>
           </Link>
-          <span>Ayush</span>
-          <span>Logout</span>
-          <span id="write" className="write">
-            <Link className="link" to="/create-blog">
-              Write
+          {current.user._id == undefined ? (
+            <Link to="/login">
+            <button>Login</button>
             </Link>
-          </span>
+            
+          ) : (
+            <>
+              <span>Ayush</span>
+              <span>Logout</span>
+              <span id="write" className="write">
+                <Link className="link" to="/create-blog">
+                  Write
+                </Link>
+              </span>
+            </>
+          )}
         </div>
       </div>
     </header>

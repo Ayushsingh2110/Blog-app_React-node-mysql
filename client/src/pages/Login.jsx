@@ -1,23 +1,44 @@
 import React, { useState } from 'react'
 import '../styles/Login.css'
+import { useDispatch } from "react-redux";
+import { useNNavigate } from "react-router-dom";
+import { login_user } from '../redux/authSlice';
 
 const Login = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const [ActiveClass, setActiveClass] = useState(false);
   const [LoginInput, setLoginInput] = useState();
   const [SignUpInput, setSignUpInput] = useState({
     
   });
   const [UserName, setUserName] = useState("");
-  const [Email, setEmail] = useState("");
-  const [Password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [RetypePassword, setRetypePassword] = useState("");
 
   function toggleClass(){
     setActiveClass(!ActiveClass)
   }
 
-  function send_login_request(){
-
+  async function send_login_request(){
+    try{
+      await axios.post("",{
+        email,
+        password
+      }).then((data) => {
+        if(data._id){
+          dispatch(login_user(data))
+          navigate("/")
+        }else{
+          alert("Login unsucce")
+        }
+      })
+    }
+    catch(err){
+      console.log(err.message)
+    }
   }
   
   function send_signUp_request(){
