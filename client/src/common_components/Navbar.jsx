@@ -36,7 +36,7 @@ const Navbar = () => {
           <Link className="link" to="/?cat=food">
             <h6>FOOD</h6>
           </Link>
-          {current.user._id == undefined ? (
+          {current.user.id == undefined ? (
             <Link to="/login">
             <button>Login</button>
             </Link>

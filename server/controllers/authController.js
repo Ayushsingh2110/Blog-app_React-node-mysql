@@ -4,9 +4,12 @@ import jwt from "jsonwebtoken";
 
 class AuthController {
     async login(req, res) {
+        console.log("enter");
+        console.log(req.body)
         const searchQuery = "SELECT * FROM users WHERE email=?"
 
         db.query(searchQuery, req.body.email, (err, user) => {
+            console.log(user)
             if (err) {
                 return res.status(404).json({ message: "user not found" });
             }
@@ -21,7 +24,7 @@ class AuthController {
 
             const { password, ...other } = user[0];
 
-            res.cookie("Lekha_accessToken", token).status(200).json(other)
+            return res.cookie("Lekha_accessToken", token).status(200).json(other)
 
         })
     }
