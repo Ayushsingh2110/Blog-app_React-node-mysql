@@ -202,3 +202,12 @@
 .container.active .toggle-right {
   transform: translateX(200%);
 }
+
+.errorMessage {
+  margin: 0px !important;
+  padding: 0px !important;
+  font-size: x-small !important;
+  color: red;
+  font-weight: 600;
+  width: 100%;
+}

@@ -12,83 +12,206 @@ const Login = ({ pageType }) => {
   const [ActiveClass, setActiveClass] = useState(
     pageType === "register" ? "register" : "login"
   );
-  const [userName, setUserName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [RetypePassword, setRetypePassword] = useState("");
-  const [PassNotMatch, setPassNotMatch] = useState(false);
+
+  const InitialRegisterForm = {
+    username: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  };
+
+  const InitialErrors = {
+    username: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  };
+
+  const InitialLoginForm = {
+    email: "",
+    password: "",
+  };
+
+  const [RegisterForm, setRegisterForm] = useState(InitialRegisterForm);
+  const [LoginForm, setLoginForm] = useState(InitialLoginForm);
+  const [Errors, setErrors] = useState(InitialErrors);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
   function toggleClass() {
+    setRegisterForm(InitialRegisterForm)
+    setLoginForm(InitialLoginForm)
+    setErrors(InitialErrors);
+    setIsSubmitted(false);
     setActiveClass(ActiveClass === "register" ? "login" : "register");
   }
 
-  function checkPassword() {
-    console.log(RetypePassword);
-    if (password !== RetypePassword) {
-      console.log("not match", password, RetypePassword);
-      return setPassNotMatch(true);
-    } else if (password === RetypePassword) {
-      console.log("match", password, RetypePassword);
-      return setPassNotMatch(false);
+  //whenever value of input changes, this function gets called first
+  function handleChange(e) {
+    if (ActiveClass === "register") {
+      setRegisterForm({ ...RegisterForm, [e.target.name]: e.target.value });
+    } else if (ActiveClass === "login") {
+      setLoginForm({ ...LoginForm, [e.target.name]: e.target.value });
     }
+  }
+
+  function validateInput() {
+    const newErrors = {};
+
+    const usernameRegex = /^[a-zA-Z0-9]{3,8}$/;
+    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+
+    if (ActiveClass === "register") {
+      validateRegisterForm(newErrors, usernameRegex, emailRegex);
+    } else if (ActiveClass === "login") {
+      validateLoginForm(newErrors);
+    }
+
+    return newErrors;
+  }
+
+  function validateRegisterForm(newErrors, usernameRegex, emailRegex) {
+    if (
+      !RegisterForm.username &&
+      !RegisterForm.email &&
+      !RegisterForm.password &&
+      !RegisterForm.reEnteredPassword
+    ) {
+      setErrors(InitialErrors);
+      return;
+    }
+
+    newErrors.username = validateUsername(RegisterForm.username, usernameRegex);
+    newErrors.email = validateEmail(RegisterForm.email, emailRegex);
+    newErrors.password = validatePassword(RegisterForm.password);
+    newErrors.confirmPassword = validateConfirmPassword(
+      RegisterForm.password,
+      RegisterForm.confirmPassword
+    );
+  }
+
+  function validateUsername(username, regex) {
+    if (!username) {
+      return "Username is required";
+    }
+    if (!regex.test(username)) {
+      return "Username must be 3-8 characters long, and should contain only alphabets[A-Z,a-z] and numbers[0-9].";
+    }
+    return "";
+  }
+
+  function validateEmail(email, regex) {
+    if (!email) {
+      return "Email is required";
+    }
+    if (!regex.test(email)) {
+      return "Enter a valid Email";
+    }
+    return "";
+  }
+
+  function validatePassword(password) {
+    if (!password) {
+      return "Password is required";
+    }
+    if (password.length < 6) {
+      return "Password should have more than 6 characters";
+    }
+    return "";
+  }
+
+  function validateConfirmPassword(password, confirmPassword) {
+    if (!confirmPassword || password !== confirmPassword) {
+      return "Confirm password doesn't match";
+    }
+    return "";
+  }
+
+  function validateLoginForm(newErrors) {
+    newErrors.email = LoginForm.email ? "" : "Email is required";
+    newErrors.password = LoginForm.password ? "" : "Password is required";
+  }
+
+  async function CheckErrors() {
+    const liveErrors = await validateInput();
+    setErrors({ ...Errors, ...liveErrors });
   }
 
   useEffect(() => {
-    checkPassword();
-  }, [RetypePassword]);
+    //CheckErrors gets called whenever a input changes or submit form button gets clicked, but not the first time when page loads
+    //as we check that form submit button is clicked or not with the help of isSubmitted
+    if (isSubmitted) {
+      CheckErrors();
+    }
+  }, [RegisterForm, LoginForm, isSubmitted]);
 
-  async function send_login_request(e) {
+  async function handleRegister(e) {
     e.preventDefault();
-    try {
-      await axios
-        .post(
-          "http://localhost:5003/api/auth/login",
-          {
-            email,
-            password,
-          },
-          {
+    setIsSubmitted(true);
+    if (
+      !Errors.username &&
+      !Errors.password &&
+      !Errors.email &&
+      !Errors.confirmPassword &&
+      RegisterForm.username &&
+      RegisterForm.password &&
+      RegisterForm.email &&
+      RegisterForm.confirmPassword
+    ) {
+      try {
+        await axios
+          .post("http://localhost:5003/api/auth/register", RegisterForm)
+          .then((res) => {
+            console.log(res.data);
+            if (res.data.id) {
+              dispatch(login_user(res.data));
+              navigate("/");
+            } else {
+              alert("Login unsuccessful !!");
+            }
+          })
+          .catch((err) => console.log(err));
+      } catch (err) {
+        console.log(err.message);
+      }
+    } else {
+      console.log("api no called !!");
+    }
+  }
+
+  async function handleLogin(e) {
+    e.preventDefault();
+    setIsSubmitted(true);
+    if (
+      LoginForm.email &&
+      LoginForm.password &&
+      !Errors.email &&
+      !Errors.password
+    ) {
+      try {
+        await axios
+          .post("http://localhost:5003/api/auth/login", LoginForm, {
             withCredentials: true,
-          }
-        )
-        .then((res) => {
-          console.log(res.data);
-          if (res.data.id) {
-            dispatch(login_user(res.data));
-            navigate("/");
-          } else {
-            alert("Login unsuccessful !!");
-          }
-        })
-        .catch((err) => console.log(err));
-    } catch (err) {
-      console.log(err.message);
+          })
+          .then((res) => {
+            console.log(res.data);
+            if (res.data.id) {
+              dispatch(login_user(res.data));
+              navigate("/");
+            } else {
+              alert("Login unsuccessful !!");
+            }
+          })
+          .catch((err) => console.log(err));
+      } catch (err) {
+        console.log(err.message);
+      }
     }
   }
 
-  async function send_signUp_request(e) {
-    e.preventDefault();
-
-    try {
-      await axios
-        .post("http://localhost:5003/api/auth/register", {
-          userName,
-          email,
-          password
-        })
-        .then((res) => {
-          console.log(res.data);
-          if (res.data.id) {
-            dispatch(login_user(res.data));
-            navigate("/");
-          } else {
-            alert("Login unsuccessful !!");
-          }
-        })
-        .catch((err) => console.log(err));
-    } catch (err) {
-      console.log(err.message);
-    }
-  }
+  //component to display input errors, getting reused after every input field
+  const InputError = ({ message }) => {
+    return <p className="errorMessage">*{message}</p>;
+  };
 
   return (
     <div className="login-body">
@@ -98,56 +221,75 @@ const Login = ({ pageType }) => {
         }
       >
         <div className="form-container sign-up">
-          <form>
+          <form onSubmit={handleRegister}>
             <h1>Create Account</h1>
             <input
               type="text"
               placeholder="username"
-              onChange={(e) => setUserName(e.currentTarget.value)}
-              value={userName}
+              name="username"
+              value={RegisterForm.username}
+              onChange={handleChange}
             />
+            {ActiveClass === "register" && Errors.username && (
+              <InputError message={Errors.username} />
+            )}
             <input
               type="email"
+              name="email"
               placeholder="email"
-              onChange={(e) => setEmail(e.currentTarget.value)}
-              value={email}
+              value={RegisterForm.email}
+              onChange={handleChange}
             />
+            {ActiveClass === "register" && Errors.email && (
+              <InputError message={Errors.email} />
+            )}
             <input
               type="password"
+              name="password"
               placeholder="password"
-              onChange={(e) => setPassword(e.currentTarget.value)}
-              value={password}
+              value={RegisterForm.password}
+              onChange={handleChange}
             />
+            {ActiveClass === "register" && Errors.password && (
+              <InputError message={Errors.password} />
+            )}
             <input
               type="password"
-              placeholder="retype password"
-              onChange={(e) => {
-                setRetypePassword(e.currentTarget.value);
-              }}
-              value={RetypePassword}
+              name="confirmPassword"
+              placeholder="confirm password"
+              value={RegisterForm.confirmPassword}
+              onChange={handleChange}
             />
-            {PassNotMatch && <span>Password does not match</span>}
-            <button type="submit" onClick={send_signUp_request}>
-              Sign Up
-            </button>
+            {ActiveClass === "register" && Errors.confirmPassword && (
+              <InputError message={Errors.confirmPassword} />
+            )}
+            <button type="submit">Sign Up</button>
           </form>
         </div>
         <div className="form-container sign-in">
-          <form>
+          <form onSubmit={handleLogin}>
             <h1>Sign In</h1>
             <input
               type="email"
+              name="email"
               placeholder="Email"
-              onChange={(e) => setEmail(e.currentTarget.value)}
-              value={email}
+              value={LoginForm.email}
+              onChange={handleChange}
             />
+            {ActiveClass === "login" && Errors.email && (
+              <InputError message={Errors.email} />
+            )}
             <input
               type="password"
+              name="password"
               placeholder="Password"
-              onChange={(e) => setPassword(e.currentTarget.value)}
-              value={password}
+              value={LoginForm.password}
+              onChange={handleChange}
             />
-            <button onClick={send_login_request}>Sign In</button>
+            {ActiveClass === "login" && Errors.password && (
+              <InputError message={Errors.password} />
+            )}
+            <button type="submit">Sign In</button>
           </form>
         </div>
         <div className="toggle-container">
