@@ -1,14 +1,40 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "../styles/write.css";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import { useSelector } from "react-redux";
+import Cookies from "js-cookie";
 
 const Write = () => {
+  const [isAuthorized, setIsAuthorized] = useState(false);
+
+  function AuthorizeUser(accessToken){
+    if(accessToken === undefined){
+      return false;
+    }
+    return true;
+  }
+
+  const user = useSelector((state) => state.auth.user)
+  
   const [BlogTitle, setBlogTitle] = useState("");
   const [BlogContent, setBlogContent] = useState("");
   const [BlogImage, setBlogImage] = useState(null);
   const [SelectedCategory, setSelectedCategory] = useState(null);
+
+  useEffect(() => {
+    const lekha_access = Cookies.get("Lekha_accessToken")
+    setIsAuthorized(AuthorizeUser(lekha_access))
+  }, []);
+
+  if(!isAuthorized){
+    return (
+      <>
+      <h1>Not Authorized</h1>
+      </>
+    )
+  }
 
   function handleClick() {}
 

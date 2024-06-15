@@ -1,12 +1,23 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import BlogList from "../common_components/BlogList";
 
 const Single = () => {
+  const { id } = useParams()
+
+  //get blog data by id
+  async function getBlog(){
+    
+  }
+  //set blog into redux
+
+  //useEffect to execute every time id changes
+
+
   return (
     <div className="flex justify-center py-[50px]">
-      <div className="flex w-[80%] gap-[50px]">
-        <div className="flex-[2]">
+      <div className="flex w-[90%] gap-[50px]">
+        <div className="flex-[3]">
           <div className="flex flex-col gap-[30px]">
             <div className="blog_img w-full h-[50vh]">
               <img

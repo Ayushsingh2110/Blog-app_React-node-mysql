@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "../styles/Login.css";
 import { useDispatch } from "react-redux";
 import { useNavigate, Link } from "react-router-dom";
-import { login_user } from "../redux/authSlice";
+import { loginUser } from "../redux/authSlice";
 import axios from "axios";
 
 const Login = ({ pageType }) => {
@@ -163,7 +163,7 @@ const Login = ({ pageType }) => {
           .then((res) => {
             console.log(res.data);
             if (res.data.id) {
-              dispatch(login_user(res.data));
+              dispatch(loginUser(res.data));
               navigate("/");
             } else {
               alert("Login unsuccessful !!");
@@ -195,7 +195,7 @@ const Login = ({ pageType }) => {
           .then((res) => {
             console.log(res.data);
             if (res.data.id) {
-              dispatch(login_user(res.data));
+              dispatch(loginUser(res.data));
               navigate("/");
             } else {
               alert("Login unsuccessful !!");
