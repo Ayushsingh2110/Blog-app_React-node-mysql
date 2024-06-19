@@ -12,7 +12,7 @@ const Home = () => {
             <img src={post.img} alt="" />
           </div>
           <div className="content">
-            <Link className="link" to={`/post/${post.id}`}>
+            <Link className="link" to={`/blog/${post.id}`}>
               <h1 className="text-[48px]">{post.title}</h1>
             </Link>
             <p className="text-[18px]">{post.desc}</p>

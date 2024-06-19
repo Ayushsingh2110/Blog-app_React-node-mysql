@@ -1,5 +1,14 @@
+:root {
+  --blue: #9ab3f5;
+  --purple: #9a1663;
+  --white: #ffffff;
+
+  --shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;
+}
+
 .navbar {
   justify-items: center;
+  background-color: paleturquoise;
 }
 
 .link,
@@ -29,18 +38,112 @@ span {
 }
 
 .nav_container {
-    width: 80%;
-    min-height: 7vh;
-    margin: auto;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    gap: 50px;
+  width: 80%;
+  min-height: 7vh;
+  margin: auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 50px;
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  height: fit-content;
+  min-width: 360px;
+  border-radius: 50px;
+  background-color: var(--white);
+}
+
+.dropdown {
+  position: relative;
+  width: 280px;
+  border-radius: 50px;
+  background-color: var(--purple);
+  border: 1px solid var(--white);
+  box-shadow: var(--shadow);
+  cursor: pointer;
+}
+
+.dropdown-text {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 1rem;
+  font-weight: 500;
+  background-color: transparent;
+  padding: 1rem 1.5rem;
+  color: var(--white);
+}
+
+.dropdown-list {
+  display: block;
+  position: absolute;
+  top: 4rem;
+  left: 0;
+  width: 100%;
+  border-radius: 15px;
+  max-height: 0;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  background-color: var(--white);
+  transition: max-height 0.5s;
+  overflow: scroll;
+  overflow-x: hidden;
+  scrollbar-width: none;
+}
+
+.dropdown-list-item {
+  font-size: 0.9rem;
+  font-weight: 500;
+  border-radius: 15px;
+  padding: 1rem 0 1rem 1.5rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.3s ease, margin-left 0.2s ease;
+}
+
+.dropdown-list-item:hover {
+  margin-left: 0.5rem;
+  color: var(--purple);
+}
+
+#category-list.show {
+  max-height: 300px;
+}
+
+.search-box {
+  display: flex;
+  align-items: center;
+  padding-right: 1rem;
+  width: 100%;
+  color: var(--purple);
+}
+
+.search-box input {
+  padding: 1rem;
+  width: 100%;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--purple);
+  border: 0;
+  outline: 0;
+}
+
+.search-box i {
+  font-size: 1.3rem;
+  cursor: pointer;
+}
+
+.search-box input::placeholder {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--purple);
+}
+
+@media (max-width: 1055px) {
+  .nav_container {
+    flex-direction: column;
+    justify-content: center;
   }
-  
-  @media (max-width:1055px){
-    .nav_container{
-      flex-direction: column;  
-      justify-content:center;
-    }
-  }
+}

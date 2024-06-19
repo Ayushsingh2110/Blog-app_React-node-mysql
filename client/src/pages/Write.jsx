@@ -5,9 +5,12 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { useSelector } from "react-redux";
 import Cookies from "js-cookie";
+import { useParams } from "react-router-dom";
 
 const Write = () => {
-  const [isAuthorized, setIsAuthorized] = useState(false);
+  const [isAuthorized, setIsAuthorized] = useState(true);
+
+  const { username } = useParams();
 
   function AuthorizeUser(accessToken){
     if(accessToken === undefined){
@@ -24,8 +27,9 @@ const Write = () => {
   const [SelectedCategory, setSelectedCategory] = useState(null);
 
   useEffect(() => {
-    const lekha_access = Cookies.get("Lekha_accessToken")
-    setIsAuthorized(AuthorizeUser(lekha_access))
+    //const lekha_access = Cookies.get("Lekha_accessToken")
+    //setIsAuthorized(AuthorizeUser(lekha_access))
+    console.log(username)
   }, []);
 
   if(!isAuthorized){
@@ -36,7 +40,9 @@ const Write = () => {
     )
   }
 
-  function handleClick() {}
+  function handleClick() {
+    console.log(BlogContent)
+  }
 
   return (
     <div className="flex justify-center">
