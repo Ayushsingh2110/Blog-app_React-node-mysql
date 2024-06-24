@@ -1,0 +1,42 @@
+.userDashboard-main{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.dashboard-content{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: calc(33vh/10);
+    margin: calc(33vh/10);
+}
+
+.dashboard-profile-img{
+    min-height: 250px;
+    height: 33vh;
+    min-width: 250px;
+    width: 33vh;
+    background-color: blue;
+    border-radius: 50%;
+}
+
+.welcome-msg{
+    font-size: clamp(20px, 2vw, 48px);
+}
+
+.user-info{
+    font-size : clamp(14px, 1.2vw, 28px);
+}
+
+.your-blog-area{
+    display: flex;
+    justify-content: center;
+}
+
+.your-blog-list{
+    width: calc(100vw - 100px)
+}
+.your-blog-list h1{
+    font-size : clamp(18px, 1.5vw, 32px);
+}

@@ -6,6 +6,4 @@ async function checkAuth(req, res, next){
     if(!token) res.status(401).send("User is unauthorized! Please login or register.")
 
     const verified = await jwt.verify(token, process.env.JWT_SECRET)
-
-    if(verified.length)
 }
