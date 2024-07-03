@@ -1,4 +1,4 @@
-import { db } from "../db.js";
+import db from "../db.js";
 import bcrypt from "bcrypt";
 
 class User{
@@ -6,18 +6,18 @@ class User{
         const searchQuery = "SELECT * FROM users WHERE id=?"
 
         return new Promise((resolve, reject) => {
-            db.query(searchQuery, userid, (err, user) => {
+            db.query(searchQuery, [ userid ], (err, user) => {
             
                 if(err) reject(err) 
                 else resolve(user) 
             })
-        }) 
+        })
     }
 
     static findByEmail(email) {
         const searchQuery = "SELECT * FROM users WHERE email=?";
         return new Promise((resolve, reject) => {
-            db.query(searchQuery, email, (err, result) => {
+            db.query(searchQuery, [ email ], (err, result) => {
                 if (err) reject(err);
                 else resolve(result);
             });

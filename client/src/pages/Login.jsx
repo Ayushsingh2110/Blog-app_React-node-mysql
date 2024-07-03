@@ -25,10 +25,11 @@ const Login = ({ pageType }) => {
     email: "",
     password: "",
     confirmPassword: "",
+    input: "",
   };
 
   const InitialLoginForm = {
-    email: "",
+    input: "",
     password: "",
   };
 
@@ -38,8 +39,8 @@ const Login = ({ pageType }) => {
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   function toggleClass() {
-    setRegisterForm(InitialRegisterForm)
-    setLoginForm(InitialLoginForm)
+    setRegisterForm(InitialRegisterForm);
+    setLoginForm(InitialLoginForm);
     setErrors(InitialErrors);
     setIsSubmitted(false);
     setActiveClass(ActiveClass === "register" ? "login" : "register");
@@ -54,39 +55,34 @@ const Login = ({ pageType }) => {
     }
   }
 
-  function validateInput() {
-    const newErrors = {};
-
+  function validateRegisterForm(registerData) {
     const usernameRegex = /^[a-zA-Z0-9]{3,8}$/;
     const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
 
-    if (ActiveClass === "register") {
-      validateRegisterForm(newErrors, usernameRegex, emailRegex);
-    } else if (ActiveClass === "login") {
-      validateLoginForm(newErrors);
-    }
-
-    return newErrors;
-  }
-
-  function validateRegisterForm(newErrors, usernameRegex, emailRegex) {
     if (
-      !RegisterForm.username &&
-      !RegisterForm.email &&
-      !RegisterForm.password &&
-      !RegisterForm.reEnteredPassword
+      !registerData.username &&
+      !registerData.email &&
+      !registerData.password &&
+      !registerData.reEnteredPassword
     ) {
-      setErrors(InitialErrors);
-      return;
+      return {
+        username: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+        input: "",
+      };
     }
 
-    newErrors.username = validateUsername(RegisterForm.username, usernameRegex);
-    newErrors.email = validateEmail(RegisterForm.email, emailRegex);
-    newErrors.password = validatePassword(RegisterForm.password);
-    newErrors.confirmPassword = validateConfirmPassword(
-      RegisterForm.password,
-      RegisterForm.confirmPassword
+    const username = validateUsername(registerData.username, usernameRegex);
+    const email = validateEmail(registerData.email, emailRegex);
+    const password = validatePassword(registerData.password);
+    const confirmPassword = validateConfirmPassword(
+      registerData.password,
+      registerData.confirmPassword
     );
+
+    return { username, email, password, confirmPassword };
   }
 
   function validateUsername(username, regex) {
@@ -126,22 +122,26 @@ const Login = ({ pageType }) => {
     return "";
   }
 
-  function validateLoginForm(newErrors) {
-    newErrors.email = LoginForm.email ? "" : "Email is required";
-    newErrors.password = LoginForm.password ? "" : "Password is required";
-  }
+  function validateLoginForm(loginData) {
+    const input = loginData.input ? "" : "enter email or username";
+    const password = loginData.password ? "" : "Password is required";
 
-  async function CheckErrors() {
-    const liveErrors = await validateInput();
-    setErrors({ ...Errors, ...liveErrors });
+    return { input, password };
   }
 
   useEffect(() => {
-    //CheckErrors gets called whenever a input changes or submit form button gets clicked, but not the first time when page loads
+    //CheckForErrors gets called whenever a input changes or submit form button gets clicked, but not the first time when page loads
     //as we check that form submit button is clicked or not with the help of isSubmitted
-    if (isSubmitted) {
-      CheckErrors();
+    async function checkForErrors() {
+      let newErrors = {};
+      if (isSubmitted && ActiveClass === "register") {
+        newErrors = validateRegisterForm(RegisterForm);
+      } else if (isSubmitted && ActiveClass === "login") {
+        newErrors = validateLoginForm(LoginForm);
+      }
+      setErrors((Errors) => ({ ...Errors, ...newErrors }));
     }
+    checkForErrors();
   }, [RegisterForm, LoginForm, isSubmitted]);
 
   async function handleRegister(e) {
@@ -271,13 +271,13 @@ const Login = ({ pageType }) => {
             <h1>Sign In</h1>
             <input
               type="email"
-              name="email"
-              placeholder="Email"
-              value={LoginForm.email}
+              name="input"
+              placeholder="Enter email or username"
+              value={LoginForm.input}
               onChange={handleChange}
             />
-            {ActiveClass === "login" && Errors.email && (
-              <InputError message={Errors.email} />
+            {ActiveClass === "login" && Errors.input && (
+              <InputError message={Errors.input} />
             )}
             <input
               type="password"
