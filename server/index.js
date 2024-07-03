@@ -2,6 +2,7 @@ import express from "express";
 import "dotenv/config.js";
 import indexRoutes from "./routes/indexRoutes.js";
 import cors from "cors";
+import db from "./db.js";
 
 const app = express();
 app.use(express.json());
@@ -28,6 +29,11 @@ app.options('*', (req, res) => {
   res.header('Access-Control-Allow-Credentials', 'true');
   res.sendStatus(204);
 });
+
+db.connect((err) => {
+  if (err) throw err;
+  console.log("DB Connected!");
+})
 
 app.use("/api", indexRoutes)
 
