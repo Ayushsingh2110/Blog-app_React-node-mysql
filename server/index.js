@@ -2,7 +2,7 @@ import express from "express";
 import "dotenv/config.js";
 import indexRoutes from "./routes/indexRoutes.js";
 import cors from "cors";
-import db from "./db.js";
+import sequelize from "./db.js";
 
 const app = express();
 app.use(express.json());
@@ -30,10 +30,11 @@ app.options('*', (req, res) => {
   res.sendStatus(204);
 });
 
-db.connect((err) => {
-  if (err) throw err;
-  console.log("DB Connected!");
-})
+sequelize.authenticate().then(() => {
+   console.log('Connection has been established successfully.');
+}).catch((error) => {
+   console.error('Unable to connect to the database: ', error);
+});
 
 app.use("/api", indexRoutes)
 
