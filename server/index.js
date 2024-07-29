@@ -30,11 +30,13 @@ app.options('*', (req, res) => {
   res.sendStatus(204);
 });
 
-sequelize.authenticate().then(() => {
-   console.log('Connection has been established successfully.');
-}).catch((error) => {
-   console.error('Unable to connect to the database: ', error);
-});
+(async () => {
+  await sequelize.sync().then(() => {
+    console.log('Connection has been established successfully.');
+ }).catch((error) => {
+  console.error('Unable to connect to the database: ', error);
+ });
+})();
 
 app.use("/api", indexRoutes)
 
