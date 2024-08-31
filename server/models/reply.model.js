@@ -15,10 +15,21 @@ const Reply = sequelize.define(
             type: DataTypes.INTEGER.UNSIGNED,
             allowNull: false,
         },
+        userName:{
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
+        userImgUrl:{
+            type: DataTypes.STRING,
+        },
         commentId:{
             type: DataTypes.INTEGER.UNSIGNED,
             allowNull: false,
         },
+        message:{
+            type: DataTypes.STRING,
+            allowNull: false,
+        }
     },
     {
         timeStamps: true,

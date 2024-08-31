@@ -11,9 +11,16 @@ const Subscription = sequelize.define(
             unique: true,
             allowNull: false,
         },
-        authorId:{
+        bloggerId:{
             type: DataTypes.INTEGER.UNSIGNED,
             allowNull: false,
+        },
+        bloggerName:{
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
+        bloggerImgUrl:{
+            type: DataTypes.STRING,
         },
         subscriberId:{
             type: DataTypes.INTEGER.UNSIGNED,

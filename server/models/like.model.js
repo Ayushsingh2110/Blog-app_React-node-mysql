@@ -19,6 +19,13 @@ const Like = sequelize.define(
             type: DataTypes.INTEGER.UNSIGNED,
             allowNull: false,
         },
+        blogTitle:{
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
+        blogImgUrl:{
+            type: DataTypes.STRING,
+        },
     },
     {
         timeStamps: true,
